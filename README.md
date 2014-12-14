@@ -6,7 +6,7 @@ It's like Idle Master, only without the cheating.
 [Idle Master](https://github.com/jshackles/idle_master) is a tool that makes Steam think you're idling so that you can get trading cards to sell. IdleNovice is a less-hacky, non-account-disably way of going about this. Instead of using the Steam API to fool Steam into thinking you're playing a game, it's just a userscript that sits on your badges page and lets you know what the most profitable choice for idling would be. 
 
 ## Installation
-You'll need something like Tampermonkey for Chrome or Greasemonkey for Firefox. Just add idlenovice.user.js to your choice of userscript extension (or just [click here](https://github.com/cpancake/idlenovice/raw/master/idlenovice.user.js)), and visit your profile's badges page (http://steamcommunity.com/id/<your steam profile id>/badges).
+You'll need something like Tampermonkey for Chrome or Greasemonkey for Firefox. Just add idlenovice.user.js to your choice of userscript extension (or just [click here](https://github.com/cpancake/idlenovice/raw/master/idlenovice.user.js)), and visit your profile's badges page (http://steamcommunity.com/id/your steam profile id/badges).
 
 ## License
 The MIT License (MIT)
