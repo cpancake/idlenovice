@@ -5,7 +5,7 @@
 // @downloadURL http://github.com/cpancake/idlenovice
 // @updateURL https://github.com/cpancake/idlenovice/raw/master/idlenovice.user.js
 // @include http*://*steamcommunity.com/id/*/badges
-// @version 0.1
+// @version 0.2
 // @copyright 2014 cpancake
 // @namespace http://github.com/cpancake/idlenovice
 // ==/UserScript==
@@ -51,6 +51,16 @@
 	if(!localStorage.getItem('idleNovice'))
 		localStorage.setItem('idleNovice', '{}');
 
+	function median(values) 
+	{
+		values.sort( function(a,b) {return a - b;} );
+		var half = Math.floor(values.length/2);
+		if(values.length % 2)
+			return values[half];
+		else
+			return (values[half-1] + values[half]) / 2.0;
+	}
+
 	function saveItem(appid, info)
 	{
 		var idleNovice;
@@ -94,8 +104,7 @@
 		$.get('http://steamcommunity.com/market/search/render/?' + $.param(params), function(data) {
 			var dom = $.parseHTML(data.results_html);
 			window.data = data;
-			var totalNumber = 0;
-			var totalPrice = 0;
+			var prices = [];
 			var currencyUnit = '';
 			$(dom)
 				.filter('.market_listing_row_link')
@@ -106,11 +115,11 @@
 					totalNumber++;
 					var priceText = $(e).children().filter('.market_table_value').children().filter('span').text();
 					currencyUnit = priceText.substr(0, 1);
-					totalPrice += parseFloat(priceText.substr(1));
+					prices.push(parseFloat(priceText.substr(1)));
 				});
-			if(!totalPrice) return;
+			var medianPrice = median(prices);
 			saveItem(appid, {
-				price: totalPrice / totalNumber,
+				price: medianPrice,
 				date: Math.floor(Date.now() / 1000)
 			});
 			saveItem('currency', currencyUnit);
@@ -179,7 +188,7 @@
 				var suggestions = getTopSuggestions(findAllGames());
 				var currencyUnit = getItem('currency');
 				var suggestionsList = suggestions.map(function(s) {
-					return '<li>' + s.title + ' - ' + s.number + ' cards at an average price of ' + currencyUnit + (Math.floor(s.price * 100) / 100) + ' each.';
+					return '<li>' + s.title + ' - ' + s.number + ' cards at a median price of ' + currencyUnit + (Math.floor(s.price * 100) / 100) + ' each.';
 				}).join('\n');
 				$('#idleNovice-suggestions').empty().append('<ul>' + suggestionsList + '</ul>')
 
